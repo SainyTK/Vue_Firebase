@@ -5,70 +5,68 @@ import Login from '@/components/Login'
 import Main from '@/components/Main'
 import Profile from '@/components/Profile'
 import firebase from 'firebase'
+import dev1 from '@/components/dev1'
 
 Vue.use(Router)
 
-let router =  new Router({
-  routes: [
-    {
+let router = new Router({
+  routes: [{
       path: '/signup',
       name: 'SignUp',
       component: SignUp,
-      meta:{
-        requiresGuest:true,
+      meta: {
+        requiresGuest: true,
       }
     },
     {
       path: '/login',
       name: 'Login',
       component: Login,
-      meta:{
-        requiresGuest:true,
+      meta: {
+        requiresGuest: true,
       }
     },
     {
       path: '/',
       name: 'Main',
       component: Main,
-      meta:{
-        requiresAuth:true,
+      meta: {
+        requiresAuth: true,
       }
     },
     {
-      path: '/profile/:id',
-      name: 'Profile',
+      path: '/profile/:dev_id',
+      name: 'view-dev',
       component: Profile,
-      meta:{
-        requiresAuth:true,
+      props: true,
+      meta: {
+        requiresAuth: true,
       }
     }
   ]
 })
 
-router.beforeEach((to,from,next)=>{
-  if(to.matched.some(record => record.meta.requiresAuth)){
-    if(!firebase.auth().currentUser){
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!firebase.auth().currentUser) {
       next({
-        path:'/login',
-        query:{
-          redirect:to.fullPath
+        path: '/login',
+        query: {
+          redirect: to.fullPath
         }
       })
-    }
-    else{
+    } else {
       next()
     }
-  }
-  else if(to.matched.some(record => record.meta.requiresGuest)){
-    if(firebase.auth().currentUser){
+  } else if (to.matched.some(record => record.meta.requiresGuest)) {
+    if (firebase.auth().currentUser) {
       next({
-        path:'/',
-        query:{
-          redirect:to.fullPath
+        path: '/',
+        query: {
+          redirect: to.fullPath
         }
       })
-    }
-    else{
+    } else {
       next()
     }
   }
