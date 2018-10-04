@@ -1,7 +1,14 @@
 <template>
+    <div>
+        <div class="row">
+            <div class="container">
+               <div class=""></div>
+            </div>
+        </div>
+        <div>
 
-        <a class="carousel-item" href="#one!"><img src="https://d2jq2hx2dbkw6t.cloudfront.net/69/fire.png"></a>
-    
+        </div>
+    </div>
 </template>
 
 <script>
@@ -17,8 +24,5 @@ export default {
 </script>
 
 <style>
-    .img{
-        width:100%;
-        resize:cover;
-    }
+    
 </style>
