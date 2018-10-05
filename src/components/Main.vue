@@ -11,7 +11,7 @@
                                 <span class="black-text">
                                     NAME: {{n.name}} | ROLE: {{n.role}}
                                 </span>
-                                <router-link v-bind:to="{name:'view-dev', params:{dev_id: n.id}}" class="btn right"> {{n.name}} </router-link>
+                                <router-link :to="{name:'view-dev', params:{dev_id: n.id}}" class="btn right"> {{n.name}} </router-link>
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@ export default {
                 {
                     id: 2,
                     name: 'Mudasay',
-                    role: 'Gammer'
+                    role: 'Implementer'
                 },
                 {
                     id: 3,
