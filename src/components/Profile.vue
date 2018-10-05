@@ -6,11 +6,10 @@
                 <div class="card-panel grey lighten-5 z-depth-1">
                     <div class="row valign-wrapper">
                         <div class="col s5 ">
-                            <img src="../assets/dev1.jpg" alt="" class="responsive-img z-depth-1"> <!-- notice the "circle" class -->
+                            <img v-bind:src="imageUrl" alt="" class="responsive-img z-depth-1"> <!-- notice the "circle" class -->
                             <div class="row">
-                                <div class="col s8">
-                                    <br>
-                                    <button class="btn">{{like}} likes</button>
+                                <div class="col s5">
+                                    <button class="btn" @click="clickLike">{{like}} likes</button>
                                 </div>
                             </div>
                         </div>
@@ -27,7 +26,11 @@
                     </div>
                 </div>
             </div>
-            <router-link to="/" class="btn purple">Back</router-link>
+                <!-- <div class="row">
+                    <div class="col s12"> -->
+                        <router-link to="/"><button class="btn purple">Back</button></router-link>
+                    <!-- </div>
+                </div> -->
         </div>
     </div>
 </template>
@@ -35,47 +38,69 @@
 <script>
 import db from './firebaseInit'
 export default {
-    name: "Profile",
-    data: function () {
+    name: "view-dev",
+    data() {
         return {
             dev_id: null,
             name: null,
+            imageUrl:null,
             position: null,
-            dob: null,
             message: null,
             like: null,
         }
     },
-    beforeRouteEnter: function (to, from, next) {
-        db.collection('dev').where('dev_id', '==', to.params.dev_id).get().then((querySnapshot) => {
+    beforeRouteEnter(to, from, next) {
+        console.log("params = " + to.params.dev_id);
+        db.collection('dev').where('dev_id', '==', to.params.dev_id).get()
+        .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 next(p => {
                     p.dev_id = doc.data().dev_id
                     p.name = doc.data().name
+                    p.imageUrl = doc.data().imageUrl
                     p.position = doc.data().position
                     p.message = doc.data().message
                     p.like = doc.data().like
                 })
             })
         })
+            
+
+    },
+    watch: {
+        $route: 'fetchData'
     },
     methods: {
-        fetchData: function () {
-            db.collection('dev').where('dev_id', '==', to.params.dev_id).get().then((querySnapshot) => {
+        fetchData() {
+            db.collection('dev').where('dev_id', '==', this.$route.params.dev_id).get()
+            .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     this.dev_id = doc.data().dev_id
                     this.name = doc.data().name
+                    this.imageUrl = doc.data().imageUrl
                     this.position = doc.data().position
                     this.message = doc.data().message
                     this.like = doc.data().like
                 })
             })
+        },
+        clickLike(){
+            this.like++
+            db.collection('dev').where('dev_id','==',this.$route.params.dev_id).get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    doc.ref.update({
+                        like : this.like
+                    }).then(()=>{
+                        console.log("Add like");
+                    }).catch((err)=>{
+                        console.log(err.message);
+                    })
+                })
+            })
         }
     },
-    watch: {
-        '$route': 'fetchData'
-    }
-};
+}
 </script>
 
 <style>
